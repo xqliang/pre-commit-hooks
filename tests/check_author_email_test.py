@@ -30,6 +30,7 @@ def test_not_configured(temp_git_dir, mocker):
 def test_invalid_name(temp_git_dir):
     with temp_git_dir.as_cwd():
         cmd_output('git', 'config', '--add', 'user.name', '')
+        cmd_output('git', 'config', '--add', 'user.email', 'test@example.com')
         assert check_author_identity() == 2
 
 
@@ -42,6 +43,7 @@ def test_invalid_email(temp_git_dir):
 
 def test_failing_cmdline_email_regexp(temp_git_dir):
     with temp_git_dir.as_cwd():
+        cmd_output('git', 'config', '--add', 'user.name', 'test')
         cmd_output('git', 'config', '--add', 'user.email', 'test@example.com')
         rc = main([
             '--email-regexp=.+@foobar.com',
@@ -51,6 +53,7 @@ def test_failing_cmdline_email_regexp(temp_git_dir):
 
 def test_passing_cmdline_email_regexp(temp_git_dir):
     with temp_git_dir.as_cwd():
+        cmd_output('git', 'config', '--add', 'user.name', 'test')
         cmd_output('git', 'config', '--add', 'user.email', 'test@example.com')
         rc = main([
             '--email-regexp=.+@example.com',
@@ -61,6 +64,7 @@ def test_passing_cmdline_email_regexp(temp_git_dir):
 def test_failing_cmdline_name_regexp(temp_git_dir):
     with temp_git_dir.as_cwd():
         cmd_output('git', 'config', '--add', 'user.name', 'test')
+        cmd_output('git', 'config', '--add', 'user.email', 'test@example.com')
         rc = main([
             '--name-regexp=[A-Z].+',
         ])
@@ -70,7 +74,18 @@ def test_failing_cmdline_name_regexp(temp_git_dir):
 def test_passing_cmdline_name_regexp(temp_git_dir):
     with temp_git_dir.as_cwd():
         cmd_output('git', 'config', '--add', 'user.name', 'Test')
+        cmd_output('git', 'config', '--add', 'user.email', 'test@example.com')
         rc = main([
             '--name-regexp=[A-Z].+',
+        ])
+        assert rc == 0
+
+
+def test_filenames_ignored(temp_git_dir):
+    with temp_git_dir.as_cwd():
+        cmd_output('git', 'config', '--add', 'user.name', 'test')
+        cmd_output('git', 'config', '--add', 'user.email', 'test@example.com')
+        rc = main([
+            '.gitignore',
         ])
         assert rc == 0

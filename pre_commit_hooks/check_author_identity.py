@@ -50,6 +50,7 @@ def main(argv=None):
         '--email-regexp', default=DEFAULT_EMAIL_REGEXP,
         help='Allowed user email pattern.',
     )
+    parser.add_argument('filenames', nargs='*', help='Filenames ingored')
 
     args = parser.parse_args(argv)
     return check_author_identity(args.name_regexp, args.email_regexp)
