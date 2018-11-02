@@ -1,0 +1,5 @@
+-   id: check-author-identity
+    name: Check git author name and email
+    description: "Forbid commit without set proper name and email"
+    entry: check-author-identity
+    language: python
