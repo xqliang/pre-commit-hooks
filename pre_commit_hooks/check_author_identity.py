@@ -4,6 +4,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import argparse
+import os
 import re
 
 from pre_commit_hooks.util import cmd_output
@@ -17,8 +18,10 @@ def check_author_identity(
     name_regexp=DEFAULT_NAME_REGEXP,
     email_regexp=DEFAULT_EMAIL_REGEXP,
 ):
-    name = cmd_output('git', 'config', '--get', 'user.name', retcode=None)
-    email = cmd_output('git', 'config', '--get', 'user.email', retcode=None)
+    name = os.environ.get('GIT_AUTHOR_NAME')
+    email = os.environ.get('GIT_AUTHOR_EMAIL')
+    name = name or cmd_output('git', 'config', '--get', 'user.name', retcode=None)
+    email = email or cmd_output('git', 'config', '--get', 'user.email', retcode=None)
 
     retv = 0
     if not name or not email:
