@@ -17,12 +17,12 @@ def check_author_identity(
     name_regexp=DEFAULT_NAME_REGEXP,
     email_regexp=DEFAULT_EMAIL_REGEXP,
 ):
-    name = cmd_output('git', 'config', '--get', 'user.name')
-    email = cmd_output('git', 'config', '--get', 'user.email')
+    name = cmd_output('git', 'config', '--get', 'user.name', retcode=None)
+    email = cmd_output('git', 'config', '--get', 'user.email', retcode=None)
 
     retv = 0
     if not name or not email:
-        print ('''name or email not configured!
+        print ('''name and/or email not configured!
 
 Use the commands:
     git config --global user.name "Your Name"
